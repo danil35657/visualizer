@@ -1,0 +1,26 @@
+
+syntax = "proto3";
+
+package visualizer_serialize;
+
+message CCharacterData
+{
+	repeated float m_mtxModelToWorld = 1;
+	repeated float m_vtTranslation = 2;
+	repeated float m_ptCameraPositionAndLerp = 3; 
+
+	uint32 m_nAnimationMode = 4;
+
+	uint32 m_nCurrentAnimation = 5;
+	uint32 m_nSavedAnimation = 6;
+
+	int32 m_nCountFrame = 7;
+	int32 m_nSavedFrame = 8;
+}
+
+message CCharacterType
+{
+	string m_strTypeName = 1;
+	string m_strCharacterName = 2;
+	repeated CCharacterData m_data = 3;
+}
