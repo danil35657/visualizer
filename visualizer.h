@@ -55,9 +55,9 @@ public:
 
 	virtual ~CCharacterSystem();
 
-	void serialize(CCharacterType& type, std::string& output);
+	void serialize(CCharacterType& type, void* buffer_ptr, int& size);
 
-	void deserialize(CCharacterType& type, const std::string& input);
+	void deserialize(CCharacterType& type, void* buffer_ptr, int size);
 
 
 public:

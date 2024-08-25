@@ -31,7 +31,7 @@ CCharacterSystem::~CCharacterSystem()
 {
 }
 
-void CCharacterSystem::serialize(CCharacterType& type, std::string& output)
+void CCharacterSystem::serialize(CCharacterType& type, void* buffer_ptr, int& size)
 {
 	visualizer_serialize::CCharacterType character_type;
 
@@ -68,15 +68,17 @@ void CCharacterSystem::serialize(CCharacterType& type, std::string& output)
 				
 	*character_type.add_m_data() = character_data;
 
-	character_type.SerializeToString(&output);
+	size = character_type.ByteSizeLong();
+
+	character_type.SerializeToArray(buffer_ptr, size);
 }
 
-void CCharacterSystem::deserialize(CCharacterType& type, const std::string& input)
+void CCharacterSystem::deserialize(CCharacterType& type, void* buffer_ptr, int size)
 {
 	visualizer_serialize::CCharacterType character_type;
 
 
-	if (!character_type.ParseFromString(input))
+	if (!character_type.ParseFromArray(buffer_ptr, size))
 	{
 		return;
 	}

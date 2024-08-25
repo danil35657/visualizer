@@ -22,10 +22,12 @@ void init_client(struct sockaddr* local_addr, int local_addrlen) {
 
     CCharacterSystem CS;
 
-    std::string output;
-    CS.serialize(type, output);
+    int size = 2048;
+    char buffer[2048];
+    void* buffer_ptr = static_cast<void*>(buffer);
+    CS.serialize(type, buffer_ptr, size);
 
-    int count = send(udp_socket, output.data(), output.size(), 0);
+    int count = send(udp_socket, buffer, size, 0);
 
     closesocket(udp_socket);
 }
@@ -35,19 +37,17 @@ void init_server(struct sockaddr* local_addr, int local_addrlen) {
     int udp_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     bind(udp_socket, local_addr, local_addrlen);
 
-    std::string input;
+    int count, size = 2048;
+    char buffer[2048];
+    void* buffer_ptr = static_cast<void*>(buffer);
 
-    input.resize(300);
-
-    int count = recv(udp_socket, input.data(), 300, 0);
-
-    input.resize(count);
+    count = recv(udp_socket, buffer, size, 0);
 
     CCharacterSystem CS;
 
     CCharacterSystem::CCharacterType CT;
 
-    CS.deserialize(CT, input);
+    CS.deserialize(CT, buffer_ptr, count);
 
     assert(CT.m_data.size() == 1);
     assert(CT.m_strTypeName == L"123");
