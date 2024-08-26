@@ -20,7 +20,7 @@ message CCharacterData
 
 message CCharacterType
 {
-	string m_strTypeName = 1;
-	string m_strCharacterName = 2;
+    repeated int32 m_strTypeName = 1;
+	repeated int32 m_strCharacterName = 2;
 	repeated CCharacterData m_data = 3;
 }

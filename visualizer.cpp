@@ -1,27 +1,5 @@
 #include "visualizer.h"
 
-std::string serialize_wstring(std::wstring& wstr) {
-	char* begin = reinterpret_cast<char*>(wstr.data());
-	std::string str;
-	int size = wstr.size() * 2;
-	str.resize(size);
-	for (int i = 0; i < size; ++i) {
-		str[i] = begin[i];
-	}
-	return std::move(str);
-}
-
-std::wstring deserialize_wstring(const std::string& str) {
-	std::wstring wstr;
-	int size = str.size();
-	wstr.resize(size / 2);
-	char* begin = reinterpret_cast<char*>(wstr.data());
-	for (int i = 0; i < size; ++i) {
-		begin[i] = str[i];
-	}
-	return std::move(wstr);
-}
-
 
 CCharacterSystem::CCharacterSystem() noexcept
 {
@@ -36,10 +14,14 @@ void CCharacterSystem::serialize(CCharacterType& type, void* buffer_ptr, int& si
 	visualizer_serialize::CCharacterType character_type;
 
 	visualizer_serialize::CCharacterData character_data;
-	
-	character_type.set_m_strtypename(serialize_wstring(type.m_strTypeName));
 
-	character_type.set_m_strcharactername(serialize_wstring(type.m_strCharacterName));
+	for (int i = 0; i < type.m_strTypeName.size(); ++i) {
+		character_type.add_m_strtypename(type.m_strTypeName[i]);
+	}
+
+	for (int i = 0; i < type.m_strCharacterName.size(); ++i) {
+		character_type.add_m_strcharactername(type.m_strCharacterName[i]);
+	}
 
 	const auto& data = type.m_data[0];
 
@@ -83,9 +65,14 @@ void CCharacterSystem::deserialize(CCharacterType& type, void* buffer_ptr, int s
 		return;
 	}
 
-	type.m_strTypeName = deserialize_wstring(character_type.m_strtypename());
 
-	type.m_strCharacterName = deserialize_wstring(character_type.m_strcharactername());
+	for (int i = 0; i < character_type.m_strtypename_size(); ++i) {
+		type.m_strTypeName.push_back(character_type.m_strtypename()[i]);
+	}
+
+	for (int i = 0; i < character_type.m_strcharactername_size(); ++i) {
+		type.m_strCharacterName.push_back(character_type.m_strcharactername()[i]);
+	}
 
 	auto& character_data = character_type.m_data()[0];
 

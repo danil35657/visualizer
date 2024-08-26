@@ -22,12 +22,12 @@ void init_client(struct sockaddr* local_addr, int local_addrlen) {
 
     CCharacterSystem CS;
 
-    int size = 2048;
+    int count, size = 2048;
     char buffer[2048];
     void* buffer_ptr = static_cast<void*>(buffer);
     CS.serialize(type, buffer_ptr, size);
 
-    int count = send(udp_socket, buffer, size, 0);
+    count = send(udp_socket, buffer, size, 0);
 
     closesocket(udp_socket);
 }
